@@ -1,0 +1,100 @@
+<html>
+<head>
+  <title>Geog465 Lab5</title>
+  <link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"/>
+</head>
+<body>
+<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+
+<script src= "LE.js"></script>
+
+<h2>Life Expectancy by Sex</h2>
+This map shows the average life expectancy (2010) of male and female each in 10 different states in America.
+<br> Click on the first button below the map. Hover your mouse on the colored states, and the life expectancy of male will be shown.
+<br> Click on the second button. Hover your mouse on the colored states, and the life expectancy of feamel will be shown.
+
+<div id="map" style="width: 700px; height: 500px; margin: auto"></div>
+<script>
+var map = L.map('map', {center: [40.04443758460856,-97.646484375], zoom: 4});
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
+
+
+//-------------------(Male)---------------
+var LEMale = L.geoJSON(LifeExpectancy, {style: popStyle, onEachFeature: popUpLEMale})
+
+
+function popStyle(feature){
+      return {fillColor:classification(feature.properties.LifeExpectancyMale),
+      weight:1,
+      opacity:1,
+      color:'white',
+      fillOpacity:0.85};
+  }
+function classification(x){
+    return x > 84? '#006d2c':
+     x > 82? '#2ca25f':
+     x > 80? '#66c2a4':
+    x > 78? '#99d8c9':
+    x > 75? '#ccece6': '#a6bddb';
+  }
+function newStyle(e) {var layer = e.target;
+  layer.setStyle({weight:5});}
+function oldStyle(e) {LEMale.resetStyle(e.target);}
+function popUpLEMale(feature,layer){
+               layer.bindPopup('State: '+ feature.properties.name +
+  '<br>' + 'Male Life Expectancy (2010): '+feature.properties.LifeExpectancyMale);
+               layer.on('mouseover', function(){layer.openPopup();});
+               layer.on('mouseover', newStyle);
+               layer.on('mouseout', oldStyle);
+               layer.on('mouseout', function(){layer.closePopup();});
+                            };
+
+//--------------------(Female)-------------
+var LEFemale = L.geoJSON(LifeExpectancy, {style: popStyle2, onEachFeature: popUpLEFemale})
+
+
+function popStyle2(feature){
+      return {fillColor:classification2(feature.properties.LifeExpectancyFemale),
+      weight:1,
+      opacity:1,
+      color:'white',
+      fillOpacity:0.85};
+  }
+function classification2(x){
+    return x > 84? '#006d2c':
+     x > 82? '#2ca25f':
+     x > 80? '#66c2a4':
+    x > 78? '#99d8c9':
+    x > 75? '#ccece6': '#a6bddb';
+  }
+function newStyle2(e) {var layer = e.target;
+  layer.setStyle({weight:5});}
+function oldStyle2(e) {LEFemale.resetStyle(e.target);}
+function popUpLEFemale(feature,layer){
+               layer.bindPopup('State: '+ feature.properties.name +
+  '<br>' + 'Female Life Expectancy (2010): '+feature.properties.LifeExpectancyFemale);
+               layer.on('mouseover', function(){layer.openPopup();});
+               layer.on('mouseover', newStyle2);
+               layer.on('mouseout', oldStyle2);
+               layer.on('mouseout', function(){layer.closePopup();});
+                            };
+//--------------(2 Buttons)-------------------------
+
+function A1(){
+  LEMale.addTo(map);
+  map.removeLayer(LEFemale);
+}
+function A2(){
+  LEFemale.addTo(map);
+  map.removeLayer(LEMale);
+}
+
+</script>
+
+  <button onclick="A1()">Male Life Expectancy</button>
+  <button onclick="A2()">Female Life Expectancy</button>
+
+
+</body>
+</html>
